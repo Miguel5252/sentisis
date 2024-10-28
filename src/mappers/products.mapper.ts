@@ -14,6 +14,7 @@ export function getMappedProduct(product: ApiProduct): Product {
   const myProduct = {
     id: product.id,
     name: product.title,
+    description: product.description,
     type: product.title,
     releaseDate: product.releaseDate,
     price: product.price,
