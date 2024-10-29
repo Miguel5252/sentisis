@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Product } from '../../models/product.model'
 import { formatDate } from '../../utils/formats'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
+import ProductProfile from '../product_profile/ProductProfile'
 
 type ProductsTableProps = {
   products: Product[]
@@ -26,9 +27,17 @@ export default function ProductsTable({
 
   return (
     <div>
-      <Dialog open={showModal} onOpenChange={setShowModal}>
-        <DialogContent>{JSON.stringify(openedProduct)}</DialogContent>
-      </Dialog>
+      {openedProduct && (
+        <Dialog open={showModal} onOpenChange={setShowModal}>
+          <DialogContent>
+            <ProductProfile
+              product={openedProduct}
+              onAdd={() => onAddUnits(openedProduct.id)}
+              onClose={() => setShowModal(false)}
+            />
+          </DialogContent>
+        </Dialog>
+      )}
       <table className=" bg-white shadow-md rounded-lg overflow-hidden">
         <thead>
           <tr className="bg-gray-100 border-b">
