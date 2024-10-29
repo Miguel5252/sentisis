@@ -1,32 +1,19 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import './App.css'
 import ProductsTable from './components/products_table/ProductsTable'
-import { getProducts } from './service/product.service'
-import { Product } from './models/product.model'
 import useCart from './hooks/useCart'
 import CartResume from './components/cart_resume/CartResume'
-import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
+import PopUp from './components/ui/PopUp'
+import useProducts from './hooks/useProducts'
 
 function App() {
-  const [products, setProducts] = useState<Product[] | null>(null)
+  const { products } = useProducts()
   const { cart, selectedProducts, handleIncreaseUnits, handleDecreaseUnits, HandleChangeUnits } =
     useCart(products)
   const [showCart, setShowCart] = useState(false)
 
-  //inicializar tabla productos
-  useEffect(() => {
-    const fetchProducts = async () => {
-      const productsLits = await getProducts()
-      if (productsLits) {
-        const sortedProductList = productsLits.sort((a, b) => b.releaseDate - a.releaseDate)
-        setProducts(sortedProductList)
-      }
-    }
-    fetchProducts()
-  }, [])
-
   return (
-    <div className="flex flex-col justify-center items-center">
+    <div className="flex flex-col justify-center items-center mt-24">
       {products && products.length > 0 && (
         <ProductsTable
           products={products}
@@ -44,14 +31,9 @@ function App() {
           Cart
         </button>
       )}
-      {showCart && (
-        <Dialog open={showCart} onOpenChange={setShowCart}>
-          <DialogContent>
-            <DialogTitle />
-            <CartResume cart={cart} />
-          </DialogContent>
-        </Dialog>
-      )}
+      <PopUp show={showCart} handleShow={setShowCart}>
+        <CartResume cart={cart} />
+      </PopUp>
     </div>
   )
 }
