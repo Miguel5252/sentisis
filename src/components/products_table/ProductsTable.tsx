@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { Product } from '../../models/product.model'
 import { formatDate } from '../../utils/formats'
-import { Dialog, DialogContent } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import ProductProfile from '../product_profile/ProductProfile'
 
 type ProductsTableProps = {
   products: Product[]
   selectedProducts: { [key: string]: number }
+  onChangeUnits: (itemId: string, units: number) => void
   onAddUnits: (itemId: string) => void
   onDelUnits: (itemId: string) => void
 }
@@ -16,6 +17,7 @@ export default function ProductsTable({
   selectedProducts,
   onAddUnits,
   onDelUnits,
+  onChangeUnits,
 }: ProductsTableProps) {
   const [showModal, setShowModal] = useState(false)
   const [openedProduct, setOpenedProduct] = useState<Product | null>(null)
@@ -30,6 +32,7 @@ export default function ProductsTable({
       {openedProduct && (
         <Dialog open={showModal} onOpenChange={setShowModal}>
           <DialogContent>
+            <DialogTitle />
             <ProductProfile
               product={openedProduct}
               onAdd={() => onAddUnits(openedProduct.id)}
@@ -84,6 +87,7 @@ export default function ProductsTable({
                       className="w-8 text-center mx-2 rounded [&::-webkit-inner-spin-button]:appearance-none"
                       type="number"
                       value={items}
+                      onChange={(e) => onChangeUnits(product.id, Number(e.target.value))}
                     />
                     <button
                       className="w-8 h-8 rounded text-center bg-slate-200 hover:border hover:border-blue-600"

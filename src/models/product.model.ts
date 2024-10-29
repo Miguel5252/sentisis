@@ -6,3 +6,7 @@ export type Product = {
   releaseDate: number
   price: number
 }
+
+type SelectedProduct = Product & { units: number }
+
+export type Cart = SelectedProduct[] | undefined

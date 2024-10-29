@@ -3,57 +3,54 @@ import './App.css'
 import ProductsTable from './components/products_table/ProductsTable'
 import { getProducts } from './service/product.service'
 import { Product } from './models/product.model'
-import { LOCAL_STORAGE } from './lib/constants'
-
-type SelectedProducts = { [key: string]: number }
+import useCart from './hooks/useCart'
+import CartResume from './components/cart_resume/CartResume'
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 
 function App() {
   const [products, setProducts] = useState<Product[] | null>(null)
-  const [selectedProducts, setSelectedProducts] = useState<SelectedProducts>({})
-
-  const handleIncreaseUnits = (itemId: string) => {
-    const newSelected = { ...selectedProducts, [itemId]: selectedProducts[itemId] + 1 }
-    setSelectedProducts(newSelected)
-    localStorage.setItem(LOCAL_STORAGE.SELECTED_PRODUCTS, JSON.stringify(newSelected))
-  }
-
-  const handleDecreaseUnits = (itemId: string) => {
-    if (selectedProducts[itemId] <= 0) return
-    const newSelected = { ...selectedProducts, [itemId]: selectedProducts[itemId] - 1 }
-    setSelectedProducts(newSelected)
-    localStorage.setItem(LOCAL_STORAGE.SELECTED_PRODUCTS, JSON.stringify(newSelected))
-  }
+  const { cart, selectedProducts, handleIncreaseUnits, handleDecreaseUnits, HandleChangeUnits } =
+    useCart(products)
+  const [showCart, setShowCart] = useState(false)
 
   //inicializar tabla productos
   useEffect(() => {
     const fetchProducts = async () => {
       const productsLits = await getProducts()
-      const sortedProductList = productsLits.sort((a, b) => b.releaseDate - a.releaseDate)
-      setProducts(sortedProductList)
+      if (productsLits) {
+        const sortedProductList = productsLits.sort((a, b) => b.releaseDate - a.releaseDate)
+        setProducts(sortedProductList)
+      }
     }
     fetchProducts()
   }, [])
 
-  //inicializar productos seleccionados
-  useEffect(() => {
-    if (products) {
-      const savedSelectedProducts = localStorage.getItem('selected_products')
-      const selected: SelectedProducts = savedSelectedProducts
-        ? JSON.parse(savedSelectedProducts)
-        : {}
-      setSelectedProducts(selected)
-    }
-  }, [products])
-
   return (
-    <div className="flex flex-row justify-center">
+    <div className="flex flex-col justify-center items-center">
       {products && products.length > 0 && (
         <ProductsTable
           products={products}
           selectedProducts={selectedProducts}
+          onChangeUnits={HandleChangeUnits}
           onAddUnits={handleIncreaseUnits}
           onDelUnits={handleDecreaseUnits}
         />
+      )}
+      {cart && cart.length > 0 && (
+        <button
+          className="mt-5 w-fit min-w-32 bg-blue-500 text-white hover:bg-blue-600 py-2 px-3 rounded"
+          onClick={() => setShowCart(true)}
+        >
+          Cart
+        </button>
+      )}
+      {showCart && (
+        <Dialog open={showCart} onOpenChange={setShowCart}>
+          <DialogContent>
+            <DialogTitle />
+            <CartResume cart={cart} />
+          </DialogContent>
+        </Dialog>
       )}
     </div>
   )
