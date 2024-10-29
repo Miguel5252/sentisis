@@ -24,7 +24,10 @@ export default function useCart(products: Product[] | null) {
   }, [products])
 
   const handleIncreaseUnits = (itemId: string) => {
-    const newSelected = { ...selectedProducts, [itemId]: selectedProducts[itemId] + 1 }
+    const newSelected = {
+      ...selectedProducts,
+      [itemId]: typeof selectedProducts[itemId] === 'number' ? selectedProducts[itemId] + 1 : 1,
+    }
     setSelectedProducts(newSelected)
     localStorage.setItem(LOCAL_STORAGE.SELECTED_PRODUCTS, JSON.stringify(newSelected))
   }
@@ -37,7 +40,7 @@ export default function useCart(products: Product[] | null) {
 
   const handleDecreaseUnits = (itemId: string) => {
     if (selectedProducts[itemId] <= 0) return
-    const newSelected = { ...selectedProducts, [itemId]: selectedProducts[itemId] - 1 }
+    const newSelected = { ...selectedProducts, [itemId]: typeof selectedProducts[itemId] === 'number' ? selectedProducts[itemId] - 1 : 0 }
     setSelectedProducts(newSelected)
     localStorage.setItem(LOCAL_STORAGE.SELECTED_PRODUCTS, JSON.stringify(newSelected))
   }
