@@ -1,5 +1,6 @@
 import { Product } from '@/models/product.model'
 import { useToast } from '@/hooks/use-toast'
+import { Plus } from 'lucide-react'
 
 type ProductProfileProps = {
   product: Product
@@ -29,10 +30,11 @@ export default function ProductProfile({ product, onAdd, onClose }: ProductProfi
       <p className="text-sm text-slate-600">{product.description}</p>
       <div className="w-full flex justify-center mt-4">
         <button
-          className="w-fit bg-blue-500 hover:bg-blue-600 text-white rounded py-1 px-6"
+          className="flex flex-row justify-center items-center gap-2 mt-5 w-fit min-w-24 bg-blue-500 text-white hover:bg-blue-600 py-2 px-3 rounded"
           onClick={handleAddItem}
         >
-          Add
+          <div>Add</div>
+          <Plus className="pb-[1px]" size={18} />
         </button>
       </div>
     </div>
