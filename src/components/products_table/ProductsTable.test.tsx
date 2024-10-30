@@ -51,7 +51,7 @@ describe('Product Profile test', () => {
   it('shows name, type, date, units and price ', () => {
     const productsList = screen.getAllByRole('row').slice(1)
 
-    for (let element in productsList) {
+    for (const element in productsList) {
       const product = productsList[element]
       const name = within(product).getByText(mockedProducts[element].name)
       const type = within(product).getByText(mockedProducts[element].type)

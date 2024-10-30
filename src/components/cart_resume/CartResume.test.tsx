@@ -74,7 +74,7 @@ describe('Cart test', () => {
   it('shows name, units and price ', () => {
     const productsList = screen.getAllByRole('row').slice(1)
 
-    for (let element in productsList) {
+    for (const element in productsList) {
       const product = productsList[element]
       const name = within(product).getByText(mockedCart[element].name)
       const units = within(product).getByText(mockedCart[element].units)
