@@ -1,50 +1,42 @@
-# React + TypeScript + Vite
+# Sentisis
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Stack Utilizado y arquitectura
 
-Currently, two official plugins are available:
+- React
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Vite: He utilizado Vite por ser bastante rapido a la hora de crear un proyecto pequeño. Pensé en utilizar NextJS por todas las facilidades que ofrece el framework a nivel de caché e infraestructura pero al no tener requisitos de SEO y de requerir que las llamadas se hagan desde el lado del cliente y no del servidor, he descartado usarlo.
 
-## Expanding the ESLint configuration
+- TypeScript: He decidido utilizar Typescript ya que lo utilizo siempre en todos mis proyectos. Hace que mi código llegue con menos errores a prodcción y me facilita la escritoru del mismo gracias a la ayuda del tipado.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- Router: Hubiera utilizado React Router Pero no ha sido necesario ya que no tenia que cargar diferentes paginas.
 
-- Configure the top-level `parserOptions` property like this:
+- Estados globales: No he necesitado utilizar el contexto de React o librerias de gestion de estado global como redux porque con los requrimientos que se pedian era suficiente con mantener el estado de carro de la compra en el localstorage del navegador .
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- Persistencia de los datos: Ya que el requerimiento era unicamente que los datos del carrito persistieran al refrescar la pagina he optado por utilizar local storage. Lo he elegido frente a session storage porque entiendo que la finalidad es que el usuario mantenga el carro de la compra para futuras visitas aunque haya cerrado la pestaña.
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+- Vitest y React Testing Library: Para la realizacion de los test he optado por Vitest ya que es muy parecido a una de las libreris mas populares (Jest) y se integra muy bien con Vite al ser parte del mismo stack.
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+He realizado un test unnitario por cada componente y un test e2e en el componente principal App.
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+He mockeado las llamadas a las apis.
+
+- Estilos: He utilizado Tailwind ya que me permite estilar muy rapido utilizando metodología mobile first.
+
+Por comentar:
+// arquitectura de carpetas, modelo, servicio, api, mappers
+// refactorizacion y separacion de responsabilidades hooks
+// shadcn
+
+# Instrucciones de Uso
+
+Modo de Desarrollo
+
+- Instala las dependencias: npm install
+- Ejecuta la aplicación en modo de desarrollo: npm run dev
+- Abre tu navegador y navega a http://localhost:5173/ para ver la aplicación en modo de desarrollo.
+
+Modo de Producción
+
+- Instala las dependencias: npm install
+- Construye la aplicación para producción: npm run build
+- ejecuta npm start y navega a http://localhost:5173/".
