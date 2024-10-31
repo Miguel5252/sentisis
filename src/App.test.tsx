@@ -35,7 +35,7 @@ vi.mock('./service/product.service', () => {
   }
 })
 
-describe('E2E test', async () => {
+describe('E2E Test', async () => {
   beforeEach(async () => {
     render(<App />)
   })
@@ -73,7 +73,18 @@ describe('E2E test', async () => {
     expect(unitsValue).toBe(String(1))
   })
 
-  it('delete unit when clicking on - button', async () => {
+  it('keep cart value on local storage', async () => {
+    //El componente App se renderiza en cada test con valores iniciales
+    //Despues deberia actualizarse con el valor de cart en localstorage
+    const productElements = await screen.findAllByRole('row')
+    const productsList = productElements.slice(1)
+
+    const rowNumber = 0
+    let unitsValue = within(productsList[rowNumber]).getByRole('spinbutton').getAttribute('value')
+    expect(unitsValue).toBe(String(1))
+  })
+
+  it('decrease unit when clicking on - button', async () => {
     const productElements = await screen.findAllByRole('row')
     const productsList = productElements.slice(1)
 
@@ -101,5 +112,37 @@ describe('E2E test', async () => {
     await act(async () => await user.click(AddButton))
     cartButton = await screen.findByRole('button', { name: 'Cart' })
     expect(cartButton).toBeDefined()
+  })
+
+  it('hides cart button when there are not products selected', async () => {
+    const productElements = await screen.findAllByRole('row')
+    const productsList = productElements.slice(1)
+    const rowNumber = 0
+    const descreaseButton = within(productsList[rowNumber]).getByRole('button', { name: '-' })
+
+    // Teniendo productos seleccionados el boton cart deberia estar visible
+    let cartButton = screen.queryByRole('button', { name: 'Cart' })
+    expect(cartButton).toBeDefined()
+
+    // Al quitar el producto seleccionado el boton cart deberia desaparecer
+    await act(async () => await user.click(descreaseButton))
+    cartButton = screen.queryByRole('button', { name: 'Cart' })
+    expect(cartButton).toBe(null)
+  })
+
+  it('adds element from product profile´s add button', async () => {
+    const productElements = await screen.findAllByRole('row')
+    const productsList = productElements.slice(1)
+
+    const rowNumber = 0
+    let unitsValue = within(productsList[rowNumber]).getByRole('spinbutton').getAttribute('value')
+    expect(unitsValue).toBe(String(0))
+
+    await act(async () => await user.click(productsList[rowNumber]))
+    const addButton = screen.getByRole('button', { name: 'Add' })
+    await act(async () => await user.click(addButton))
+
+    unitsValue = within(productsList[rowNumber]).getByRole('spinbutton').getAttribute('value')
+    expect(unitsValue).toBe(String(1))
   })
 })

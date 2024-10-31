@@ -32,17 +32,21 @@ export default function useCart(products: Product[] | null) {
     localStorage.setItem(LOCAL_STORAGE.SELECTED_PRODUCTS, JSON.stringify(newSelected))
   }
 
+  const handleDecreaseUnits = (itemId: string) => {
+    if (selectedProducts[itemId] <= 0) return
+    const newSelected = {
+      ...selectedProducts,
+      [itemId]: typeof selectedProducts[itemId] === 'number' ? selectedProducts[itemId] - 1 : 0,
+    }
+    setSelectedProducts(newSelected)
+    localStorage.setItem(LOCAL_STORAGE.SELECTED_PRODUCTS, JSON.stringify(newSelected))
+  }
+
   const HandleChangeUnits = (itemId: string, units: number) => {
     const newSelected = { ...selectedProducts, [itemId]: units }
     setSelectedProducts(newSelected)
     localStorage.setItem(LOCAL_STORAGE.SELECTED_PRODUCTS, JSON.stringify(newSelected))
   }
 
-  const handleDecreaseUnits = (itemId: string) => {
-    if (selectedProducts[itemId] <= 0) return
-    const newSelected = { ...selectedProducts, [itemId]: typeof selectedProducts[itemId] === 'number' ? selectedProducts[itemId] - 1 : 0 }
-    setSelectedProducts(newSelected)
-    localStorage.setItem(LOCAL_STORAGE.SELECTED_PRODUCTS, JSON.stringify(newSelected))
-  }
   return { selectedProducts, cart, handleIncreaseUnits, handleDecreaseUnits, HandleChangeUnits }
 }
